@@ -46,7 +46,7 @@ class _ProductScreenState extends State<ProductScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: _backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         currentIndex: _selectedIndex,
         onTap: _onNavTap,
         items: const [
