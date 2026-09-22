@@ -3,37 +3,45 @@ import 'screens/login_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+// Global theme notifier
+final ThemeNotifier themeNotifier = ThemeNotifier();
 
-  static MyAppState? of(BuildContext context) =>
-      context.findAncestorStateOfType<MyAppState>();
-
-  @override
-  State<MyApp> createState() => MyAppState();
-}
-
-class MyAppState extends State<MyApp> {
+class ThemeNotifier extends ChangeNotifier {
   bool _isDarkMode = true;
 
-  void setTheme(bool isDark) {
-    setState(() {
-      _isDarkMode = isDark;
-    });
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
   }
+
+  void setTheme(bool isDark) {
+    _isDarkMode = isDark;
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'E-Commerce App',
-      theme: AppTheme.getLightTheme(),
-      darkTheme: AppTheme.getDarkTheme(),
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const LoginScreen(),
+    return ListenableBuilder(
+      listenable: themeNotifier,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'E-Commerce App',
+          theme: AppTheme.getLightTheme(),
+          darkTheme: AppTheme.getDarkTheme(),
+          themeMode: themeNotifier.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: const LoginScreen(),
+        );
+      },
     );
   }
 }

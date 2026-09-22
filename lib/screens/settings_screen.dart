@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
 import 'login_screen.dart';
+import '../theme/app_theme.dart';
 
 /// Settings screen with theme toggle and logout functionality.
 class SettingsScreen extends StatefulWidget {
@@ -106,7 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Switch(
                       value: isDark,
                       onChanged: (value) {
-                        MyApp.of(context)?.setTheme(value);
+                        themeNotifier.setTheme(value);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
