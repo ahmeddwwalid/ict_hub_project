@@ -155,24 +155,22 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Verify your email',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Enter the 4-digit code sent to ${widget.email}',
-                  style: const TextStyle(color: Colors.white54, fontSize: 14),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 32),
 
-                const Text(
+                Text(
                   'Verification code',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
                 const SizedBox(height: 8),
                 TextFormField(

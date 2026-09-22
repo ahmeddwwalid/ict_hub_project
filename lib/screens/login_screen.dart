@@ -151,18 +151,16 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
-                const Text(
+                Text(
                   'Welcome back',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Sign in to continue',
-                  style: TextStyle(color: Colors.white54, fontSize: 15),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 32),
 
@@ -199,13 +197,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: _handleForgotPassword,
-                    child: const Text(
+                    child: Text(
                       'Forgot password?',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                        decoration: TextDecoration.underline,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            decoration: TextDecoration.underline,
+                          ),
                     ),
                   ),
                 ),
@@ -248,17 +244,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: GestureDetector(
                     onTap: _handleGoToSignUp,
                     child: RichText(
-                      text: const TextSpan(
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
                         children: [
-                          TextSpan(text: "Don't have an account? "),
+                          const TextSpan(text: "Don't have an account? "),
                           TextSpan(
                             text: 'Sign up',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
                           ),
                         ],
                       ),
