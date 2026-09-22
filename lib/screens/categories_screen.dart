@@ -45,7 +45,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     final selectedProducts = _getProductsByCategory(_selectedCategory);
 
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           // Category chips
@@ -65,7 +65,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         _selectedCategory = category;
                       });
                     },
-                    backgroundColor: _chipColor,
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF2A2A2A)
+                        : Colors.grey[200],
                     selectedColor: Colors.blueAccent,
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.white : Colors.white70,
@@ -90,7 +92,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: _cardColor,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF1E1E1E)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(

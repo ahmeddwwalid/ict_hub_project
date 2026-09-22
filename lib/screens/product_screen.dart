@@ -15,9 +15,6 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   int _selectedIndex = 0;
 
-  static const _backgroundColor = Color(0xFF121212);
-  static const _cardColor = Color(0xFF1E1E1E);
-
   void _handleTap(BuildContext context, Product product) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -35,9 +32,8 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: _backgroundColor,
         title: const Text('Products'),
         elevation: 0,
       ),
@@ -84,7 +80,9 @@ class _ProductScreenState extends State<ProductScreen> {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: _cardColor,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF1E1E1E)
+                  : Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

@@ -8,13 +8,10 @@ class ProductDetailsScreen extends StatelessWidget {
 
   const ProductDetailsScreen({super.key, required this.product});
 
-  static const _backgroundColor = Color(0xFF121212);
-  static const _chipColor = Color(0xFF2A2A2A);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -62,7 +59,9 @@ class ProductDetailsScreen extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: _chipColor,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF2A2A2A)
+                            : Colors.grey[200],
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(

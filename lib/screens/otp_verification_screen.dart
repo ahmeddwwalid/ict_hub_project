@@ -22,9 +22,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   int _resendCooldown = 0;
   Timer? _timer;
 
-  static const _backgroundColor = Color(0xFF121212);
-  static const _fieldColor = Color(0xFF2A2A2A);
-
   // Fixed mock code so you can test the flow without a real
   // email/SMS provider. Replace with real verification later.
   static const _mockOtp = '1234';
@@ -146,9 +143,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: _backgroundColor,
         elevation: 0,
       ),
       body: SafeArea(
@@ -185,11 +181,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   maxLength: 4,
                   textAlign: TextAlign.center,
                   validator: _validateOtp,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
                   decoration: InputDecoration(
                     counterText: '',
-                    filled: true,
-                    fillColor: _fieldColor,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 14,
                       vertical: 14,

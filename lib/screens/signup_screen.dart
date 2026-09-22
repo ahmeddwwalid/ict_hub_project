@@ -22,9 +22,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
 
-  static const _backgroundColor = Color(0xFF121212);
-  static const _fieldColor = Color(0xFF2A2A2A);
-
   @override
   void dispose() {
     _nameController.dispose();
@@ -135,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.white70, fontSize: 14),
+          style: Theme.of(context).inputDecorationTheme.labelStyle,
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -143,10 +140,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.bodyLarge,
           decoration: InputDecoration(
-            filled: true,
-            fillColor: _fieldColor,
             suffixIcon: suffixIcon,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
@@ -183,9 +178,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: _backgroundColor,
         elevation: 0,
       ),
       body: SafeArea(

@@ -19,9 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _isLoading = false;
 
-  static const _backgroundColor = Color(0xFF121212);
-  static const _fieldColor = Color(0xFF2A2A2A);
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -98,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.white70, fontSize: 14),
+          style: Theme.of(context).inputDecorationTheme.labelStyle,
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -106,10 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.bodyLarge,
           decoration: InputDecoration(
-            filled: true,
-            fillColor: _fieldColor,
             suffixIcon: suffixIcon,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
@@ -146,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
