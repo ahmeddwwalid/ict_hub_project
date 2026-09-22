@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart
-impport '../utils/theme_colors.dart';';
+import 'package:flutter/material.dart';
+import '../utils/theme_colors.dart';
 import 'product_screen.dart';
 
 /// OTP Verification screen. On success, clears the nav stack and
@@ -156,7 +156,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Verify your email',
                   style: TextStyle(
                     fontSize: 28,
@@ -167,13 +167,19 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Enter the 4-digit code sent to ${widget.email}',
-                  style: const TextStyle(color: ThemeColors.getTertiaryTextColor(context), fontSize: 14),
+                  style: TextStyle(
+                    color: ThemeColors.getTertiaryTextColor(context),
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 32),
 
-                const Text(
+                Text(
                   'Verification code',
-                  style: TextStyle(color: ThemeColors.getSecondaryTextColor(context), fontSize: 14),
+                  style: TextStyle(
+                    color: ThemeColors.getSecondaryTextColor(context),
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -214,8 +220,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   child: ElevatedButton(
                     onPressed: _isVerifying ? null : _handleVerify,
                     style: ElevatedButton.styleFrom(
-                      backgroundcolor: ThemeColors.getTextColor(context),
-                      disabledBackgroundcolor: ThemeColors.getSecondaryTextColor(context),
+                      backgroundColor: ThemeColors.getTextColor(context),
+                      disabledBackgroundColor: ThemeColors.getSecondaryTextColor(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

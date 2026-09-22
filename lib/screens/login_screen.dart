@@ -221,8 +221,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundcolor: ThemeColors.getTextColor(context),
-                      disabledBackgroundcolor: ThemeColors.getSecondaryTextColor(context),
+                      backgroundColor: ThemeColors.getTextColor(context),
+                      disabledBackgroundColor: ThemeColors.getSecondaryTextColor(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

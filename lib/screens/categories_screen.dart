@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart
-impport '../utils/theme_colors.dart';';
+import 'package:flutter/material.dart';
+import '../utils/theme_colors.dart';
 import '../models/product.dart';
 import 'product_details_screen.dart';
 
@@ -127,7 +127,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 product.title,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: ThemeColors.getTextColor(context),
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -135,7 +135,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 product.category,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: ThemeColors.getTertiaryTextColor(context),
                                   fontSize: 12,
                                 ),
@@ -145,7 +145,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         ),
                         Text(
                           '\$${product.price.toStringAsFixed(2)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: ThemeColors.getTextColor(context),
                             fontWeight: FontWeight.bold,
                           ),
