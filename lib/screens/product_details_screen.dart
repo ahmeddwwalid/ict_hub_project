@@ -37,7 +37,10 @@ class ProductDetailsScreen extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: Colors.black45,
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                         onPressed: () {
                           if (Navigator.of(context).canPop()) {
                             Navigator.of(context).pop();
@@ -66,20 +69,15 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                       child: Text(
                         product.category,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
                     const SizedBox(height: 14),
                     Text(
                       product.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -91,22 +89,16 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const Text(
+                    Text(
                       'Description',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       product.description,
-                      style: const TextStyle(
-                        color: Colors.white60,
-                        fontSize: 14,
-                        height: 1.5,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            height: 1.5,
+                          ),
                     ),
                     const SizedBox(height: 32),
                     SizedBox(
