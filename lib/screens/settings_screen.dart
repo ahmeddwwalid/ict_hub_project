@@ -220,9 +220,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     Theme.of(context).textTheme.bodySmall,
                               ),
                               Text(
-                                isDark ? '🌙 Dark' : '☀️ Light',
-                                style: const TextStyle(
-                                  color: Colors.blueAccent,
+                                isDark ? '🌙 Dark (${Theme.of(context).brightness})' : '☀️ Light (${Theme.of(context).brightness})',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),

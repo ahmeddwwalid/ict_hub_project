@@ -14,10 +14,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   late String _selectedCategory;
   late List<String> _categories;
 
-  static const _backgroundColor = Color(0xFF121212);
-  static const _cardColor = Color(0xFF1E1E1E);
-  static const _chipColor = Color(0xFF2A2A2A);
-
   @override
   void initState() {
     super.initState();
