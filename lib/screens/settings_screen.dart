@@ -11,13 +11,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late bool _isDarkMode;
-
-  @override
-  void initState() {
-    super.initState();
-    _isDarkMode = Theme.of(context).brightness == Brightness.dark;
-  }
 
   void _handleLogout() {
     showDialog(
@@ -103,31 +96,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          _isDarkMode
-                              ? 'Dark theme enabled'
-                              : 'Light theme enabled',
+                          isDark
+                              ? '🌙 Dark theme enabled'
+                              : '☀️ Light theme enabled',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
                     Switch(
-                      value: _isDarkMode,
+                      value: isDark,
                       onChanged: (value) {
-                        setState(() {
-                          _isDarkMode = value;
-                        });
-                        MyApp.of(context)?.setTheme(value);
+                        MyApp.of(context)?.setTheme(!value);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              value
+                              !value
                                   ? '🌙 Dark mode enabled'
                                   : '☀️ Light mode enabled',
                             ),
+                            duration: const Duration(seconds: 2),
                           ),
                         );
                       },
                       activeColor: Colors.blueAccent,
+                      inactiveTrackColor: Colors.grey[300],
                     ),
                   ],
                 ),
@@ -227,7 +219,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     Theme.of(context).textTheme.bodySmall,
                               ),
                               Text(
-                                _isDarkMode ? '🌙 Dark' : '☀️ Light',
+                                isDark ? '🌙 Dark' : '☀️ Light',
                                 style: const TextStyle(
                                   color: Colors.blueAccent,
                                   fontSize: 12,
