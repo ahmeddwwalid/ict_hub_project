@@ -57,11 +57,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   }
 
   String? _validateOtp(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    if (value == null || value.isEmpty) {
       return 'Enter the code';
     }
-    if (value.trim().length != 4) {
+    if (value.length != 4) {
       return 'Code must be 4 digits';
+    }
+    if (!RegExp(r'^\d{4}$').hasMatch(value)) {
+      return 'Code must contain only numbers';
     }
     return null;
   }
@@ -83,14 +86,24 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       _isVerifying = false;
     });
 
-    if (_otpController.text.trim() == _mockOtp) {
+    final enteredCode = _otpController.text.trim();
+    if (enteredCode == _mockOtp) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email verified successfully!')),
+      );
+
+      if (!mounted) return;
+
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const ProductScreen()),
         (route) => false,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid code, try 1234 for this demo')),
+        SnackBar(
+          content: Text('Invalid code. Correct code is: $_mockOtp'),
+          backgroundColor: Colors.red.shade700,
+        ),
       );
     }
   }
@@ -110,7 +123,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('A new code was sent to ${widget.email}')),
+      SnackBar(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('✓ Code resent to ${widget.email}'),
+            const SizedBox(height: 8),
+            const Text(
+              '📌 Demo Code: 1234',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 3),
+      ),
     );
 
     _startCooldown();

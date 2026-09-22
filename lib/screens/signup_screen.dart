@@ -92,8 +92,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final email = _emailController.text.trim();
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('A verification code was sent to $email')),
+      SnackBar(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('✓ Account created successfully!'),
+            const SizedBox(height: 4),
+            Text('Verification code sent to: $email'),
+            const SizedBox(height: 8),
+            const Text(
+              '📌 Demo Code: 1234',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 4),
+      ),
     );
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted) return;
 
     Navigator.of(context).push(
       MaterialPageRoute(
