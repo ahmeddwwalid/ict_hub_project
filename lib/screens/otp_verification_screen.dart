@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart
+impport '../utils/theme_colors.dart';';
 import 'product_screen.dart';
 
 /// OTP Verification screen. On success, clears the nav stack and
@@ -160,19 +161,19 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: ThemeColors.getTextColor(context),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Enter the 4-digit code sent to ${widget.email}',
-                  style: const TextStyle(color: Colors.white54, fontSize: 14),
+                  style: const TextStyle(color: ThemeColors.getTertiaryTextColor(context), fontSize: 14),
                 ),
                 const SizedBox(height: 32),
 
                 const Text(
                   'Verification code',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  style: TextStyle(color: ThemeColors.getSecondaryTextColor(context), fontSize: 14),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -213,8 +214,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   child: ElevatedButton(
                     onPressed: _isVerifying ? null : _handleVerify,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      disabledBackgroundColor: Colors.white70,
+                      backgroundcolor: ThemeColors.getTextColor(context),
+                      disabledBackgroundcolor: ThemeColors.getSecondaryTextColor(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -254,13 +255,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   width: 16,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Colors.white70,
+                                    color: ThemeColors.getSecondaryTextColor(context),
                                   ),
                                 )
                               : const Text(
                                   'Resend code',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: ThemeColors.getTextColor(context),
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
@@ -274,3 +275,4 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     );
   }
 }
+

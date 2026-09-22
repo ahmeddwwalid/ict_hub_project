@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart
+impport '../utils/theme_colors.dart';';
 import '../models/product.dart';
 
 /// Product Details screen. Receives the tapped [product] from the
@@ -22,7 +23,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: 260,
-                    color: Colors.white,
+                    color: ThemeColors.getTextColor(context),
                     padding: const EdgeInsets.all(24),
                     child: Image.network(
                       product.image,
@@ -67,7 +68,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       child: Text(
                         product.category,
                         style: const TextStyle(
-                          color: Colors.white70,
+                          color: ThemeColors.getSecondaryTextColor(context),
                           fontSize: 12,
                         ),
                       ),
@@ -76,7 +77,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     Text(
                       product.title,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: ThemeColors.getTextColor(context),
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -94,7 +95,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     const Text(
                       'Description',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ThemeColors.getTextColor(context),
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -122,7 +123,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundcolor: ThemeColors.getTextColor(context),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -147,3 +148,4 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 }
+

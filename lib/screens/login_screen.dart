@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
 import 'product_screen.dart';
+import '../utils/theme_colors.dart';
 
 /// Login screen. On success, navigates to the Product screen.
 class LoginScreen extends StatefulWidget {
@@ -151,18 +152,21 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
-                const Text(
+                Text(
                   'Welcome back',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: ThemeColors.getTextColor(context),
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Sign in to continue',
-                  style: TextStyle(color: Colors.white54, fontSize: 15),
+                  style: TextStyle(
+                    color: ThemeColors.getTertiaryTextColor(context),
+                    fontSize: 15,
+                  ),
                 ),
                 const SizedBox(height: 32),
 
@@ -184,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       _obscurePassword
                           ? Icons.visibility_off
                           : Icons.visibility,
-                      color: Colors.white54,
+                      color: ThemeColors.getTertiaryTextColor(context),
                     ),
                     onPressed: () {
                       setState(() {
@@ -199,10 +203,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: _handleForgotPassword,
-                    child: const Text(
+                    child: Text(
                       'Forgot password?',
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: ThemeColors.getSecondaryTextColor(context),
                         fontSize: 13,
                         decoration: TextDecoration.underline,
                       ),
@@ -217,8 +221,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      disabledBackgroundColor: Colors.white70,
+                      backgroundcolor: ThemeColors.getTextColor(context),
+                      disabledBackgroundcolor: ThemeColors.getSecondaryTextColor(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -248,14 +252,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: GestureDetector(
                     onTap: _handleGoToSignUp,
                     child: RichText(
-                      text: const TextSpan(
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: ThemeColors.getSecondaryTextColor(context),
+                          fontSize: 14,
+                        ),
                         children: [
-                          TextSpan(text: "Don't have an account? "),
+                          const TextSpan(text: "Don't have an account? "),
                           TextSpan(
                             text: 'Sign up',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: ThemeColors.getTextColor(context),
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
@@ -274,3 +281,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

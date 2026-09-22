@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart
+impport '../utils/theme_colors.dart';';
 import '../models/product.dart';
 import 'product_details_screen.dart';
 
@@ -112,7 +113,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               height: 56,
                               child: Icon(
                                 Icons.image_not_supported,
-                                color: Colors.white38,
+                                color: ThemeColors.getIconColor(context),
                               ),
                             ),
                           ),
@@ -127,7 +128,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: ThemeColors.getTextColor(context),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -135,7 +136,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               Text(
                                 product.category,
                                 style: const TextStyle(
-                                  color: Colors.white54,
+                                  color: ThemeColors.getTertiaryTextColor(context),
                                   fontSize: 12,
                                 ),
                               ),
@@ -145,7 +146,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         Text(
                           '\$${product.price.toStringAsFixed(2)}',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: ThemeColors.getTextColor(context),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -161,3 +162,4 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 }
+

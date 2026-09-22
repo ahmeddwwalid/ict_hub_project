@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'otp_verification_screen.dart';
+import '../utils/theme_colors.dart';
 
 /// Sign Up screen. On success, sends a mock OTP and navigates to
 /// the verification screen with the entered email.
@@ -190,18 +191,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Create account',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: ThemeColors.getTextColor(context),
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Sign up to get started',
-                  style: TextStyle(color: Colors.white54, fontSize: 15),
+                  style: TextStyle(
+                    color: ThemeColors.getTertiaryTextColor(context),
+                    fontSize: 15,
+                  ),
                 ),
                 const SizedBox(height: 28),
 
@@ -230,7 +234,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       _obscurePassword
                           ? Icons.visibility_off
                           : Icons.visibility,
-                      color: Colors.white54,
+                      color: ThemeColors.getTertiaryTextColor(context),
                     ),
                     onPressed: () {
                       setState(() {
@@ -251,7 +255,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       _obscureConfirmPassword
                           ? Icons.visibility_off
                           : Icons.visibility,
-                      color: Colors.white54,
+                      color: ThemeColors.getTertiaryTextColor(context),
                     ),
                     onPressed: () {
                       setState(() {
@@ -268,8 +272,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleSignUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      disabledBackgroundColor: Colors.white70,
+                      backgroundcolor: ThemeColors.getTextColor(context),
+                      disabledBackgroundcolor: ThemeColors.getSecondaryTextColor(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -302,3 +306,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
