@@ -106,11 +106,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Switch(
                       value: isDark,
                       onChanged: (value) {
-                        MyApp.of(context)?.setTheme(!value);
+                        MyApp.of(context)?.setTheme(value);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              !value
+                              value
                                   ? '🌙 Dark mode enabled'
                                   : '☀️ Light mode enabled',
                             ),
