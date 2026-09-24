@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart
+impport '../utils/theme_colors.dart';';
 import '../main.dart';
 import 'login_screen.dart';
 import '../theme/app_theme.dart';
@@ -158,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Text(
                         'Logout',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: ThemeColors.getTextColor(context),
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -242,3 +243,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
+
