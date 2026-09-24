@@ -1,139 +1,83 @@
 # ICT Hub Project - Flutter E-Commerce App
 
-A beautiful Flutter e-commerce application with modern UI, authentication flow, product browsing, categories, and settings.
+A Flutter shop app on the live [accessories-eshop API](https://accessories-eshop.runasp.net/openapi/v1.json):
+onboarding, login/sign-up with email verification, products, categories, a
+server-side cart, and a dark/light theme.
+
+Built with the same structure and patterns as
+[ict_hub_flutter_app](https://github.com/Kareemm0/ict_hub_flutter_app):
+Cubit + GetIt + GoRouter + Dio + fpdart + Freezed + SharedPreferences.
 
 ## Features
 
-### Authentication
-- **Login Screen**: Email and password validation with mock authentication
-- **Sign Up Screen**: User registration with password confirmation
-- **OTP Verification**: Email verification with OTP code (mock: use 1234)
-- **Session Management**: Logout functionality from settings
-
-### Products
-- **Product Listing**: Browse all products with images, titles, categories, and prices
-- **Product Details**: View detailed information about each product with add to cart functionality
-- **Mock Data**: Pre-loaded products from various categories (Electronics, Bags, Home)
-
-### Categories
-- **Category Filtering**: Filter products by category (Electronics, Bags, Home)
-- **Category Chips**: Interactive category selection with visual feedback
-- **Grouped Products**: Products organized and displayed by their category
-
-### Settings
-- **Theme Toggle**: Switch between dark and light modes (UI framework ready)
-- **App Info**: Display app version and current theme status
-- **Logout**: Secure logout with confirmation dialog
-- **User Preferences**: Centralized preferences management
-
-### UI/UX
-- Dark theme by default
-- Bottom navigation for easy screen navigation
-- Smooth animations and transitions
-- Responsive design that works on all screen sizes
-- Consistent color scheme and typography
+- **Splash + onboarding** — onboarding shows on first launch only; finishing
+  or skipping it stores `isAppOpen` in local storage.
+- **Auth** — `POST auth/login` returns a token that is saved to local storage
+  and sent as `Authorization: Bearer …` on every request. Sign up
+  (`auth/register`) emails a code that the OTP screen verifies
+  (`auth/verify-email`). A `401` clears the token and returns to login.
+- **Products** — list and details from `GET products` / `GET products/{id}`.
+- **Categories** — chips built from the products' categories; picking one
+  asks the API for that category (`GET products?category=…`).
+- **Cart** — add from the list or the details screen (`POST cart/items`),
+  change quantity (`PUT cart/items/{id}`), remove (`DELETE cart/items/{id}`),
+  with a total and a badge on the Cart tab.
+- **Settings** — theme toggle and logout.
 
 ## Project Structure
 
 ```
 lib/
-├── main.dart                    # App entry point
-├── models/
-│   └── product.dart            # Product data model
-└── screens/
-    ├── login_screen.dart       # Authentication
-    ├── signup_screen.dart      # User registration
-    ├── otp_verification_screen.dart  # Email verification
-    ├── product_screen.dart     # Main product listing with bottom nav
-    ├── product_details_screen.dart   # Product details view
-    ├── categories_screen.dart  # Category filtering
-    └── settings_screen.dart    # User settings
+├── main.dart                     # App entry: DI, app-wide cubits, router
+├── injection_container.dart      # GetIt registrations (InjectionHelper)
+├── app/
+│   ├── app_router.dart           # GoRouter + StatefulShellRoute tabs
+│   └── routes.dart               # Route names
+├── core/
+│   ├── constant/local_keys.dart  # isAppOpen, accessToken, refreshToken
+│   ├── cubit/theme/              # ThemeCubit
+│   ├── local_storage/            # BaseLocalStorage (abstract)
+│   ├── network/api/              # ApiConsumer, Endpoints, StatusCodes
+│   ├── network/error/            # Exceptions, Failures
+│   ├── utils/                    # AppTheme, Validators
+│   └── widget/                   # Shared widgets
+├── data/
+│   ├── data_source/abstract/     # Auth / Product / Cart data sources
+│   ├── data_source/impl/
+│   ├── external/dio/             # DioConsumer, AppInterceptors (token)
+│   ├── external/local_storage/   # SharedPreferences implementation
+│   └── repos/                    # Repo implementations
+├── domain/
+│   ├── models/                   # Freezed + json_serializable models
+│   └── repos/                    # Repo contracts
+└── presentation/
+    ├── cubit/                    # auth, products, product_details, cart
+    ├── layout/main_layout.dart   # Bottom tabs + cart badge
+    └── screens/
 ```
 
 ## Getting Started
 
-### Prerequisites
-- Flutter SDK (3.0.0 or higher)
-- Dart SDK
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/ahmeddwwalid/ict_hub_project.git
-cd ict_hub_project
-```
-
-2. Get dependencies:
 ```bash
 flutter pub get
-```
-
-3. Run the app:
-```bash
+dart run build_runner build
 flutter run
 ```
 
-## Demo Credentials
+On **Windows**, building with plugins needs symlink support: turn on
+*Developer Mode* (`start ms-settings:developers`) once.
 
-For testing the authentication flow:
-- **Email**: any valid email format (e.g., test@example.com)
-- **Password**: at least 6 characters
-- **OTP Code**: 1234 (mock verification)
+On **web**, the API doesn't send CORS headers, so the browser blocks its
+responses; use Android, iOS or Windows to talk to the API.
 
-## Features in Detail
+## Tests
 
-### Authentication Flow
-1. Start at Login screen
-2. Sign up for new account → OTP verification → Product screen
-3. Login with credentials → Product screen
-4. Navigate to Settings → Logout (returns to Login screen)
-
-### Product Browsing
-- View all products in the Products tab
-- Tap any product to see detailed information
-- Add products to cart (shows snackbar confirmation)
-- Switch between categories using the Categories tab
-
-### Categories
-- Filter products by category using chips at the top
-- Selected category is highlighted in blue
-- Products update instantly when category changes
-
-### Settings
-- Toggle dark/light mode (UI prepared for theme switching)
-- View app version and current theme status
-- Logout securely with confirmation
-
-## API Integration Ready
-
-The mock data and network calls can be easily replaced with real API calls:
-- Replace `mockProducts` list with API calls in product screens
-- Replace mock authentication with real backend calls
-- Replace mock OTP with real SMS/email service
-- Implement real theme persistence with shared preferences
-
-## Future Enhancements
-
-- [ ] Real API integration (backend connection)
-- [ ] User profile management
-- [ ] Shopping cart persistence
-- [ ] Order history
-- [ ] Wishlist functionality
-- [ ] Search and filtering
-- [ ] Payment gateway integration
-- [ ] Push notifications
-- [ ] Theme persistence with shared preferences
-
-## License
-
-This project is created for educational purposes.
+```bash
+flutter test                                   # unit + widget tests (fake API)
+flutter test integration_test -d windows       # real app against the live API
+```
 
 ## Author
 
 Ahmed Walid
 GitHub: [@ahmeddwwalid](https://github.com/ahmeddwwalid)
-
----
-
-**Note**: This is a demo app. Replace all mock data and authentication with real API calls before deploying to production.

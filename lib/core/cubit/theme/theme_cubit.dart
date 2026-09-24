@@ -1,13 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'theme_state.dart';
-part 'theme_cubit.freezed.dart';
+import 'package:ict_hub_project/core/cubit/theme/theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {
   ThemeCubit() : super(const ThemeState(isDark: true));
 
-  void toggleTheme() => emit(ThemeState(isDark: !state.isDark));
-
-  void setTheme(bool isDark) => emit(ThemeState(isDark: isDark));
+  void toggleTheme() {
+    emit(ThemeState(isDark: !state.isDark));
+  }
 }
