@@ -6,7 +6,7 @@ import 'package:ict_hub_project/core/local_storage/base_local_storage.dart';
 import 'package:ict_hub_project/domain/models/on_boarding_model.dart';
 
 /// Shown on first launch only: finishing or skipping it saves
-/// [LocalKeys.isOpen] so the splash screen goes straight to login next time.
+/// [LocalKeys.isOpen] so the app opens on login next time.
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key, required this._localStorage});
 

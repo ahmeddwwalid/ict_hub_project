@@ -34,6 +34,9 @@ class AppNetworkImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
+      // On web, image hosts without CORS headers can't be fetched; fall
+      // back to a plain <img> element so the picture still shows.
+      webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
       errorBuilder: (context, error, stackTrace) => placeholder,
     );
   }

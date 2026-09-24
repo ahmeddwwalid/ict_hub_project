@@ -1,0 +1,10 @@
+# Used by `flutter run -d chrome` only.
+#
+# The shop API sends no CORS headers, so Chrome blocks its responses when
+# the app calls it directly. In debug web runs the app calls /api/ on its
+# own origin instead (see Endpoints.baseUrl) and the dev server forwards
+# those requests to the real API.
+server:
+  proxy:
+    - prefix: "/api/"
+      target: "https://accessories-eshop.runasp.net/"

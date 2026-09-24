@@ -32,4 +32,10 @@ class NoInternetConnectionException extends ServerException {
   const NoInternetConnectionException() : super(msg: "No Internet Connection");
 }
 
+/// On web a failed request can't be told apart from a blocked one, so
+/// don't claim the device is offline.
+class ServerUnreachableException extends ServerException {
+  const ServerUnreachableException() : super(msg: "Couldn't reach the server");
+}
+
 class CacheException implements Exception {}

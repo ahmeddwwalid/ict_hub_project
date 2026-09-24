@@ -279,8 +279,6 @@ void main() {
   group('app flow', () {
     Future<void> pumpApp(WidgetTester tester) async {
       await tester.pumpWidget(MyApp(router: AppRouter.createRouter()));
-      // Splash waits 2s before routing.
-      await tester.pump(const Duration(seconds: 2));
       await tester.pumpAndSettle();
     }
 
@@ -290,6 +288,8 @@ void main() {
       await setUpApp();
       await pumpApp(tester);
 
+      // No intro/splash screen: the app opens straight on onboarding.
+      expect(find.text('ICT Hub Store'), findsNothing);
       expect(find.text('Discover Accessories'), findsOneWidget);
       await tester.tap(find.text('Skip'));
       await tester.pumpAndSettle();

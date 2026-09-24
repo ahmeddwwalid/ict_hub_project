@@ -10,7 +10,7 @@ Cubit + GetIt + GoRouter + Dio + fpdart + Freezed + SharedPreferences.
 
 ## Features
 
-- **Splash + onboarding** — onboarding shows on first launch only; finishing
+- **Onboarding** — shows on first launch only (no splash screen); finishing
   or skipping it stores `isAppOpen` in local storage.
 - **Auth** — `POST auth/login` returns a token that is saved to local storage
   and sent as `Authorization: Bearer …` on every request. Sign up
@@ -67,8 +67,11 @@ flutter run
 On **Windows**, building with plugins needs symlink support: turn on
 *Developer Mode* (`start ms-settings:developers`) once.
 
-On **web**, the API doesn't send CORS headers, so the browser blocks its
-responses; use Android, iOS or Windows to talk to the API.
+On **Chrome**, run from the project folder with `flutter run -d chrome`.
+The API doesn't send CORS headers, so browsers block direct calls to it; in
+debug web runs the app calls `/api/` on its own origin and the Flutter dev
+server forwards it to the API (`web_dev_config.yaml`). A deployed
+`flutter build web` has no such proxy and needs CORS enabled on the API.
 
 ## Tests
 

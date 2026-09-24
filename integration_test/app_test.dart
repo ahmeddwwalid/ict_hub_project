@@ -39,7 +39,7 @@ void main() {
 
     await tester.pumpWidget(MyApp(router: router));
 
-    // First launch: splash -> onboarding -> login; isOpen gets saved.
+    // First launch: onboarding -> login; isOpen gets saved.
     await pumpUntil(tester, find.text('Discover Accessories'));
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();

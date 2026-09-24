@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ict_hub_project/app/routes.dart';
+import 'package:ict_hub_project/core/constant/local_keys.dart';
 import 'package:ict_hub_project/core/local_storage/base_local_storage.dart';
 import 'package:ict_hub_project/injection_container.dart';
 import 'package:ict_hub_project/presentation/cubit/product_details/product_details_cubit.dart';
@@ -16,7 +17,6 @@ import 'package:ict_hub_project/presentation/screens/product_details_screen.dart
 import 'package:ict_hub_project/presentation/screens/product_screen.dart';
 import 'package:ict_hub_project/presentation/screens/settings_screen.dart';
 import 'package:ict_hub_project/presentation/screens/signup_screen.dart';
-import 'package:ict_hub_project/presentation/screens/splash_screen.dart';
 
 /// Lets code without a BuildContext (the Dio interceptor) navigate.
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -24,16 +24,25 @@ final navigatorKey = GlobalKey<NavigatorState>();
 class AppRouter {
   static final GoRouter appRouter = createRouter();
 
+  /// First launch -> onboarding; no saved token -> login; else products.
+  static Future<String> _startLocation(BaseLocalStorage localStorage) async {
+    final bool? isOpen = await localStorage.getBool(LocalKeys.isOpen);
+    if (isOpen != true) return "/${Routes.onBoarding}";
+
+    final String? token = await localStorage.getString(LocalKeys.accessToken);
+    if (token == null || token.isEmpty) return "/${Routes.loginScreen}";
+
+    return "/${Routes.productScreen}";
+  }
+
   static GoRouter createRouter() => GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: "/",
     routes: [
+      // No screen of its own: sends the user straight to where they belong.
       GoRoute(
         path: "/",
-        name: Routes.splashScreen,
-        builder: (context, state) {
-          return SplashScreen(localStorage: getIt<BaseLocalStorage>());
-        },
+        redirect: (context, state) => _startLocation(getIt<BaseLocalStorage>()),
       ),
       GoRoute(
         path: "/${Routes.onBoarding}",

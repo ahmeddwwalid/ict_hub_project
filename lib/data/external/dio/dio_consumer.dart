@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:ict_hub_project/core/network/api/api_consumer.dart';
 import 'package:ict_hub_project/core/network/api/status_code.dart';
@@ -162,7 +163,9 @@ class DioConsumer implements ApiConsumer {
         exception = const InternalServerErrorException();
       case DioExceptionType.connectionError:
       case DioExceptionType.unknown:
-        exception = const NoInternetConnectionException();
+        exception = kIsWeb
+            ? const ServerUnreachableException()
+            : const NoInternetConnectionException();
     }
 
     return ServerFailure(msg: exception.msg);
