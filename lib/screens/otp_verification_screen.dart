@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'product_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ict_hub_project/features/auth/presentation/cubit/auth_cubit.dart';
 
 /// OTP Verification screen. On success, clears the nav stack and
 /// goes to the Product screen (user is now fully logged in).
@@ -17,14 +18,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _otpController = TextEditingController();
 
-  bool _isVerifying = false;
   bool _isResending = false;
   int _resendCooldown = 0;
   Timer? _timer;
-
-  // Fixed mock code so you can test the flow without a real
-  // email/SMS provider. Replace with real verification later.
-  static const _mockOtp = '1234';
 
   @override
   void dispose() {
@@ -66,43 +62,34 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return null;
   }
 
-  Future<void> _handleVerify() async {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) return;
-
-    setState(() {
-      _isVerifying = true;
-    });
-
-    // Mock verification — simulates a network request.
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-
-    setState(() {
-      _isVerifying = false;
-    });
-
-    final enteredCode = _otpController.text.trim();
-    if (enteredCode == _mockOtp) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email verified successfully!')),
+  bool get _isVerifying => context.watch<AuthCubit>().state.maybeMap(
+        loading: (_) => true,
+        orElse: () => false,
       );
 
-      if (!mounted) return;
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const ProductScreen()),
-        (route) => false,
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+  void _onAuthState(BuildContext context, AuthState state) {
+    // Screens lower in the stack stay mounted; only the visible one reacts.
+    if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
+    state.maybeMap(
+      error: (e) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Invalid code. Correct code is: $_mockOtp'),
+          content: Text(e.message),
           backgroundColor: Colors.red.shade700,
         ),
-      );
-    }
+      ),
+      success: (_) => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email verified successfully!')),
+      ),
+      orElse: () {},
+    );
+  }
+
+  void _handleVerify() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    context.read<AuthCubit>().verifyOtp(
+      widget.email,
+      _otpController.text.trim(),
+    );
   }
 
   Future<void> _handleResend() async {
@@ -142,7 +129,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: _onAuthState,
+      child: Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
@@ -269,6 +258,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -1,153 +1,85 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import 'product_details_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ict_hub_project/config/injection_container.dart';
+import 'package:ict_hub_project/features/products/presentation/cubit/product_cubit.dart';
+import 'package:ict_hub_project/widgets/product_list.dart';
 
-/// Categories screen showing products grouped by category.
-class CategoriesScreen extends StatefulWidget {
+/// Categories tab: chips built from the fetched products; selecting one
+/// asks the [ProductCubit] for that category's products.
+class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
 
   @override
-  State<CategoriesScreen> createState() => _CategoriesScreenState();
-}
-
-class _CategoriesScreenState extends State<CategoriesScreen> {
-  late String _selectedCategory;
-  late List<String> _categories;
-
-  @override
-  void initState() {
-    super.initState();
-    _categories = mockProducts
-        .map((p) => p.category)
-        .toSet()
-        .toList();
-    _selectedCategory = _categories.first;
-  }
-
-  List<Product> _getProductsByCategory(String category) {
-    return mockProducts.where((p) => p.category == category).toList();
-  }
-
-  void _handleTap(BuildContext context, Product product) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProductDetailsScreen(product: product),
-      ),
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<ProductCubit>()..fetchProducts(),
+      child: const _CategoriesView(),
     );
   }
+}
+
+class _CategoriesView extends StatelessWidget {
+  const _CategoriesView();
 
   @override
   Widget build(BuildContext context) {
-    final selectedProducts = _getProductsByCategory(_selectedCategory);
+    final theme = Theme.of(context);
+    final cubit = context.read<ProductCubit>();
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          // Category chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: _categories.map((category) {
-                final isSelected = category == _selectedCategory;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(category),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedCategory = category;
-                      });
-                    },
-                    backgroundColor: Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF2A2A2A)
-                        : Colors.grey[200],
-                    selectedColor: Colors.blueAccent,
-                    labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white70,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          // Products list
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: selectedProducts.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final product = selectedProducts[index];
-                return InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => _handleTap(context, product),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF1E1E1E)
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            product.image,
-                            width: 56,
-                            height: 56,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const SizedBox(
-                              width: 56,
-                              height: 56,
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white38,
-                              ),
-                            ),
-                          ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: BlocBuilder<ProductCubit, ProductState>(
+        builder: (context, state) {
+          final selected = state.maybeMap(
+            success: (s) => s.category,
+            orElse: () => null,
+          );
+          final categories = cubit.categories;
+
+          return Column(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  children: categories.map((category) {
+                    final isSelected = category == selected;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(category),
+                        selected: isSelected,
+                        onSelected: (_) => cubit.fetchByCategory(category),
+                        selectedColor: Colors.blueAccent,
+                        labelStyle: theme.textTheme.bodyMedium?.copyWith(
+                          color: isSelected ? Colors.white : null,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                product.category,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          '\$${product.price.toStringAsFixed(2)}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              Expanded(
+                child: state.map(
+                  initial: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                  loading: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                  success: (s) => s.category == null
+                      ? Center(
+                          child: Text('Select a category',
+                              style: theme.textTheme.bodyMedium),
+                        )
+                      : ProductList(products: s.products),
+                  error: (e) => Center(child: Text(e.message)),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

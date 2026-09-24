@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'otp_verification_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ict_hub_project/features/auth/presentation/cubit/auth_cubit.dart';
 
 /// Sign Up screen. On success, sends a mock OTP and navigates to
 /// the verification screen with the entered email.
@@ -20,7 +22,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -66,56 +67,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  Future<void> _handleSignUp() async {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) return;
+  bool get _isLoading => context.watch<AuthCubit>().state.maybeMap(
+        loading: (_) => true,
+        orElse: () => false,
+      );
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Mock signup + OTP send — simulates two network requests.
-    // Replace both with real API calls once they're ready. We wait
-    // for the OTP "request" to resolve before moving on, so we know
-    // it actually succeeded rather than assuming it did.
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    final email = _emailController.text.trim();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('✓ Account created successfully!'),
-            const SizedBox(height: 4),
-            Text('Verification code sent to: $email'),
-            const SizedBox(height: 8),
-            const Text(
-              '📌 Demo Code: 1234',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
+  void _onAuthState(BuildContext context, AuthState state) {
+    // Screens lower in the stack stay mounted; only the visible one reacts.
+    if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
+    state.maybeMap(
+      error: (e) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red.shade700,
         ),
-        duration: const Duration(seconds: 4),
       ),
+      otpSent: (s) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'Verification code sent to ${s.email}\nDemo Code: 1234'),
+          ),
+        );
+        context.push('/otp/${Uri.encodeComponent(s.email)}');
+      },
+      orElse: () {},
     );
+  }
 
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (!mounted) return;
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => OtpVerificationScreen(email: email),
-      ),
+  void _handleSignUp() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    context.read<AuthCubit>().signup(
+      _nameController.text.trim(),
+      _emailController.text.trim(),
+      _passwordController.text,
     );
   }
 
@@ -177,7 +162,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: _onAuthState,
+      child: Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
@@ -297,6 +284,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

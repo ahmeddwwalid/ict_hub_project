@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart
-impport '../utils/theme_colors.dart';';
-import '../models/product.dart';
-import 'product_details_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ict_hub_project/config/injection_container.dart';
+import 'package:ict_hub_project/features/products/presentation/cubit/product_cubit.dart';
+import 'package:ict_hub_project/widgets/product_list.dart';
 import 'categories_screen.dart';
 import 'settings_screen.dart';
 
-/// Product list screen with navigation to categories and settings.
+/// Main tab screen: products, categories and settings.
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
 
@@ -15,20 +16,6 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   int _selectedIndex = 0;
-
-  void _handleTap(BuildContext context, Product product) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProductDetailsScreen(product: product),
-      ),
-    );
-  }
-
-  void _onNavTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +27,16 @@ class _ProductScreenState extends State<ProductScreen> {
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: [
-          _buildProductsList(),
-          const CategoriesScreen(),
-          const SettingsScreen(),
+        children: const [
+          _ProductsTab(),
+          CategoriesScreen(),
+          SettingsScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         currentIndex: _selectedIndex,
-        onTap: _onNavTap,
+        onTap: (index) => setState(() => _selectedIndex = index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
@@ -67,76 +54,43 @@ class _ProductScreenState extends State<ProductScreen> {
       ),
     );
   }
+}
 
-  Widget _buildProductsList() {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: mockProducts.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final product = mockProducts[index];
-        return InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () => _handleTap(context, product),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF1E1E1E)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
+class _ProductsTab extends StatelessWidget {
+  const _ProductsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<ProductCubit>()..fetchProducts(),
+      child: const _ProductsView(),
+    );
+  }
+}
+
+class _ProductsView extends StatelessWidget {
+  const _ProductsView();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductCubit, ProductState>(
+      builder: (context, state) {
+        return state.map(
+          initial: (_) => const Center(child: CircularProgressIndicator()),
+          loading: (_) => const Center(child: CircularProgressIndicator()),
+          success: (s) => RefreshIndicator(
+            onRefresh: () => context.read<ProductCubit>().fetchProducts(),
+            child: ProductList(products: s.products),
+          ),
+          error: (e) => Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    product.image,
-                    width: 56,
-                    height: 56,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const SizedBox(
-                      width: 56,
-                      height: 56,
-                      child: Icon(
-                        Icons.image_not_supported,
-                        color: ThemeColors.getIconColor(context),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: ThemeColors.getTextColor(context),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        product.category,
-                        style: const TextStyle(
-                          color: ThemeColors.getTertiaryTextColor(context),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '\$${product.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: ThemeColors.getTextColor(context),
-                    fontWeight: FontWeight.bold,
-                  ),
+                Text(e.message, textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () => context.read<ProductCubit>().fetchProducts(),
+                  child: const Text('Retry'),
                 ),
               ],
             ),
@@ -146,4 +100,3 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 }
-

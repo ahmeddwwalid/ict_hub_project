@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
+import 'package:ict_hub_project/features/products/domain/entity/product_entity.dart';
 
 /// Product Details screen. Receives the tapped [product] from the
 /// Product list screen.
 class ProductDetailsScreen extends StatelessWidget {
-  final Product product;
+  final ProductEntity product;
 
   const ProductDetailsScreen({super.key, required this.product});
 

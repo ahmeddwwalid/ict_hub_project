@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 class ProductEntity extends Equatable {
-  final int id;
+  final String id;
   final String title;
   final double price;
-  final String category;
+  final List<String> categories;
   final String description;
   final String image;
 
@@ -12,11 +12,15 @@ class ProductEntity extends Equatable {
     required this.id,
     required this.title,
     required this.price,
-    required this.category,
+    required this.categories,
     required this.description,
     required this.image,
   });
 
+  /// Display label; a product can belong to several categories or none.
+  String get category =>
+      categories.isEmpty ? 'Uncategorized' : categories.join(' · ');
+
   @override
-  List<Object?> get props => [id, title, price, category, description, image];
+  List<Object?> get props => [id, title, price, categories, description, image];
 }

@@ -3,22 +3,24 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'product_model.g.dart';
 
+/// One item of the `/api/products` response's `items` array.
 @JsonSerializable()
 class ProductModel {
-  final int id;
-  final String title;
+  final String id;
+  final String name;
   final double price;
-  final String category;
-  final String description;
-  final String image;
+  @JsonKey(defaultValue: <String>[])
+  final List<String> categories;
+  final String? description;
+  final String? coverPictureUrl;
 
   ProductModel({
     required this.id,
-    required this.title,
+    required this.name,
     required this.price,
-    required this.category,
-    required this.description,
-    required this.image,
+    required this.categories,
+    this.description,
+    this.coverPictureUrl,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
@@ -28,10 +30,10 @@ class ProductModel {
 
   ProductEntity toEntity() => ProductEntity(
         id: id,
-        title: title,
+        title: name,
         price: price,
-        category: category,
-        description: description,
-        image: image,
+        categories: categories,
+        description: description ?? '',
+        image: coverPictureUrl ?? '',
       );
 }

@@ -6,6 +6,10 @@ abstract class ProductRemoteDataSource {
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
+  /// The API pages its results (10 per page by default). The whole
+  /// catalog is small, so ask for it in one page.
+  static const _pageSize = 100;
+
   final Dio dio;
 
   ProductRemoteDataSourceImpl(this.dio);
@@ -13,14 +17,18 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<List<ProductModel>> fetchProducts() async {
     try {
-      final response = await dio.get('/products');
+      final response = await dio.get(
+        '/products',
+        queryParameters: {'pageSize': _pageSize},
+      );
       if (response.statusCode != 200) {
         throw Exception('Failed to load products');
       }
 
-      final List<dynamic> data = response.data;
-      return data
-          .map((product) => ProductModel.fromJson(product as Map<String, dynamic>))
+      final items = (response.data as Map<String, dynamic>)['items'] as List;
+      return items
+          .map((product) =>
+              ProductModel.fromJson(product as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
       throw Exception('API Error: ${e.message}');

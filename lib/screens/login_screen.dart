@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'signup_screen.dart';
-import 'product_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ict_hub_project/features/auth/presentation/cubit/auth_cubit.dart';
 
 /// Login screen. On success, navigates to the Product screen.
 class LoginScreen extends StatefulWidget {
@@ -17,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -47,26 +47,30 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  Future<void> _handleLogin() async {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) return;
+  bool get _isLoading => context.watch<AuthCubit>().state.maybeMap(
+        loading: (_) => true,
+        orElse: () => false,
+      );
 
-    setState(() {
-      _isLoading = true;
-    });
+  void _onAuthState(BuildContext context, AuthState state) {
+    // Screens lower in the stack stay mounted; only the visible one reacts.
+    if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
+    state.maybeMap(
+      error: (e) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red.shade700,
+        ),
+      ),
+      orElse: () {},
+    );
+  }
 
-    // Mock login call — simulates a network request.
-    // Replace this with your real API call once it's ready.
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const ProductScreen()),
+  void _handleLogin() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    context.read<AuthCubit>().login(
+      _emailController.text.trim(),
+      _passwordController.text,
     );
   }
 
@@ -76,11 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _handleGoToSignUp() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const SignUpScreen()),
-    );
-  }
+  void _handleGoToSignUp() => context.push('/signup');
 
   Widget _buildTextField({
     required TextEditingController controller,
@@ -140,7 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: _onAuthState,
+      child: Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -266,6 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
